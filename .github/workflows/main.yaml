@@ -1,0 +1,41 @@
+name: Main workflow
+
+on:
+  push:
+    paths:
+      - .github/**
+
+env:
+  NODE_VERSION: '14.5.5' 
+
+jobs:
+  checkout:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Nodejam repo
+        uses: actions/checkout@v2
+        with:
+          repository: komarserjio/notejam/
+      - name: Upload Express NoteJam app
+        uses: actions/upload-artifact@v2
+        with:
+          name: express-notejam-app
+          path: express/notejam
+
+  test_and_build:
+    runs-on: ubuntu-latest
+    needs: [checkout]
+    steps:
+      - name: Download Express NoteJam app
+        uses: actions/download-artifact@v2
+        with:
+          name: express-notejam-app
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Install dependencies
+        run: npm install
+      - name: Test application
+        run: ./node_modules/mocha/bin/mocha tests
+
