@@ -15,7 +15,7 @@ jobs:
       - name: Checkout Nodejam repo
         uses: actions/checkout@v2
         with:
-          repository: komarserjio/notejam/
+          repository: komarserjio/notejam
       - name: Upload Express NoteJam app
         uses: actions/upload-artifact@v2
         with:
