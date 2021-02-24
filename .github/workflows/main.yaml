@@ -54,6 +54,13 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: dockerfile
+      - name: Login to Docker registry
+        uses: Azure/docker-login@v1
+        with:
+          login-server: notepadacr.azurecr.io
+          username: ${{ secrets.ACR_SPA_ID }}
+          password: ${{ secrets.ACR_SPA_PASSWORD }}
       - name: Build Docker image
-        run: docker build -t notepadapp:${{ github.sha }} .
-
+        run: docker build -t notepadacr.azurecr.io/notepadapp:${{ github.sha }} .
+      - name: Push Docker image
+        run: docker push notepadacr.azurecr.io/notepadapp:${{ github.sha }}
