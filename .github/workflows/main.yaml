@@ -12,6 +12,13 @@ jobs:
   checkout:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v2
+      - name: Upload Dockerfile
+        uses: actions/upload-artifact@v2
+        with:
+          name: dockerfile
+          path: Dockerfile
       - name: Checkout Nodejam repo
         uses: actions/checkout@v2
         with:
@@ -43,8 +50,10 @@ jobs:
         run: cd ${{ env.APP_FOLDER }} && ./node_modules/mocha/bin/mocha tests
       - name: Init database
         run: cd ${{ env.APP_FOLDER }} && node db.js
-      - name: Checkout this repo
-        uses: actions/checkout@v2
+      - name: Download Dockerfile
+        uses: actions/download-artifact@v2
+        with:
+          name: dockerfile
       - name: Build Docker image
         run: docker build -t notepadapp:${{ github.sha }} .
 
