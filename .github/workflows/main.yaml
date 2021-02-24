@@ -25,17 +25,26 @@ jobs:
   test_and_build:
     runs-on: ubuntu-latest
     needs: [checkout]
+    env:
+      APP_FOLDER: ${{ github.workspace }}/app
     steps:
       - name: Download Express NoteJam app
         uses: actions/download-artifact@v2
         with:
           name: express-notejam-app
+          path: ${{ env.APP_FOLDER }}
       - name: Use Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v2
         with:
           node-version: ${{ env.NODE_VERSION }}
       - name: Install dependencies
-        run: npm install
+        run: cd ${{ env.APP_FOLDER }} && npm install
       - name: Test application
-        run: ./node_modules/mocha/bin/mocha tests
+        run: cd ${{ env.APP_FOLDER }} && ./node_modules/mocha/bin/mocha tests
+      - name: Init database
+        run: cd ${{ env.APP_FOLDER }} && node db.js
+      - name: Checkout this repo
+        uses: actions/checkout@v2
+      - name: Build Docker image
+        run: docker build -t notepadapp:${{ github.sha }} .
 
