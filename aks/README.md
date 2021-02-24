@@ -41,6 +41,28 @@
   )
   ```
 
-## Credentials for the container registry
+### Credentials for the container registry
 
-Store the `ACR_SPA_ID` and `ACR_SPA_PASSWORD` variables in the GitHub repository as secrets with the same name. 
+Store the `ACR_SPA_ID` and `ACR_SPA_PASSWORD` variables in the GitHub repository as secrets with the same name.
+
+- save the credentials as Kubernetes secret
+  ```shell script
+  ENCODED_SPA_CREDS=$(echo "${ACR_SPA_ID}:${ACR_SPA_PASSWORD}" | base64)
+  ENCODED_SPA_K8S_SECRET=$(echo "{\"auths\": {\"${ACR_VAULT_NAME}.azurecr.io\": {\"email\": \"user@example.com\", \"auth\": \"${ENCODED_SPA_CREDS}\"}}}" | base64)
+  sed \
+    -e "s/###ACR_CREDENTIALS###/${ENCODED_SPA_K8S_SECRET}/" \
+    secret.yaml-template > secret.yaml
+  ```
+
+## Kubernetes namespace
+
+With kubectl you can create the application's namespace and the secret to access the container registry
+
+  ```shell script
+  kubectl apply \
+    --filename=namespace.yaml
+  
+  kubectl apply \
+    --filename=secret.yaml
+  ```
+The other YAML files will be applied by the pipeline
