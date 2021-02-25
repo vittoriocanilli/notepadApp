@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - .github/**
+      - aks/*.yaml
 
 env:
   NODE_VERSION: '14' 

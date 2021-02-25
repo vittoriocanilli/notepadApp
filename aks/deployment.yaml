@@ -22,6 +22,7 @@ spec:
     metadata:
       labels:
         app: notepad-application
+    spec:
       containers:
         - name: notepad-app-container
           image: notepadacr.azurecr.io/notepadapp:###IMAGE_TAG###
