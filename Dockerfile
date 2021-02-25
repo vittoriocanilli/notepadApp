@@ -5,5 +5,6 @@ COPY app/ app
 
 WORKDIR app
 
+USER node
 EXPOSE 3000
-CMD DEBUG=* ./bin/www
+CMD ["DEBUG=* ./bin/www"]

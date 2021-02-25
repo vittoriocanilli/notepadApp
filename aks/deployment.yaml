@@ -37,6 +37,6 @@ spec:
               cpu: "50m"
               memory: 128Mi
       securityContext:
-        runAsUser: 0
+        runAsUser: 1000
       imagePullSecrets:
         - name: notepad-acr-secret
