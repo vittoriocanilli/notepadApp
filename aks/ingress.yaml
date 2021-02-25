@@ -1,0 +1,21 @@
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: notepad-app-ingress
+  namespace: notepad-app
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/proxy-body-size: 8m
+    nginx.ingress.kubernetes.io/gzip-types: text/plain text/css application/json application/javascript application/x-javascript text/xml application/xml application/xml+rss text/javascript application/atom+xml application/vnd.ms-fontobject application/x-font-ttf application/x-web-app-manifest+json application/xhtml+xml font/opentype image/svg+xml image/x-icon text/x-component
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+spec:
+  rules:
+  - host: notepad-app.example.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: notepad-app-service
+          servicePort: 80
