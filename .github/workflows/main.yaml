@@ -85,7 +85,7 @@ jobs:
           kubeconfig: ${{ secrets.KUBE_CONFIG }}
       - name: Prepare deployment file
         run: |
-          sed -i "s|###IMAGE_TAG###|${{ env.github.sha }}|" aks/deployment.yaml
+          sed -i "s|###IMAGE_TAG###|${{ github.sha }}|" aks/deployment.yaml
       - name: Deploy all files needed for the application
         uses: Azure/k8s-deploy@v1.4
         with:
