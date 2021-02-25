@@ -1,0 +1,39 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notepad-app-deployment
+  namespace: notepad-app
+  labels:
+    app: notepad-application
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: notepad-application
+  revisionHistoryLimit: 5
+  progressDeadlineSeconds: 120
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: notepad-application
+      containers:
+        - name: notepad-app-container
+          image: notepadacr.azurecr.io/notepadapp:###IMAGE_TAG###
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+          resources:
+            limits:
+              cpu: "200m"
+              memory: 256Mi
+            requests:
+              cpu: "50m"
+              memory: 128Mi
+      imagePullSecrets:
+        - name: notepad-acr-secret

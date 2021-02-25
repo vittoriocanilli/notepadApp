@@ -19,6 +19,11 @@ jobs:
         with:
           name: dockerfile
           path: Dockerfile
+      - name: Upload Kubernetes YAML files
+        uses: actions/upload-artifact@v2
+        with:
+          name: kubernetes-yaml
+          path: aks
       - name: Checkout Nodejam repo
         uses: actions/checkout@v2
         with:
@@ -64,3 +69,28 @@ jobs:
         run: docker build -t notepadacr.azurecr.io/notepadapp:${{ github.sha }} .
       - name: Push Docker image
         run: docker push notepadacr.azurecr.io/notepadapp:${{ github.sha }}
+
+  deploy_on_kubernetes:
+    runs-on: ubuntu-latest
+    needs: [test_and_build]
+    steps:
+      - name: Kubernetes YAML files
+        uses: actions/download-artifact@v2
+        with:
+          name: kubernetes-yaml
+          path: aks
+      - name: Set kube config file
+        uses: Azure/k8s-set-context@v1
+        with:
+          kubeconfig: ${{ secrets.KUBE_CONFIG }}
+      - name: Prepare deployment file
+        run: |
+          sed -i "s|###IMAGE_TAG###|${{ env.github.sha }}|" aks/deployment.yaml
+      - name: Deploy all files needed for the application
+        uses: Azure/k8s-deploy@v1.4
+        with:
+          namespace: 'notepad-app'
+          manifests: |
+            aks/deployment.yaml
+            aks/service.yaml
+          kubectl-version: 'v1.18.14'

@@ -1,0 +1,17 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: notepad-app-service
+  namespace: notepad-app
+  labels:
+    app: notepad-app-service
+spec:
+  ports:
+  - name: web
+    port: 80
+    targetPort: 3000
+    protocol: TCP
+  type: ClusterIP
+  selector:
+    app: notepad-application
