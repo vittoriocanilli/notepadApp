@@ -94,5 +94,6 @@ jobs:
           namespace: 'notepad-app'
           manifests: |
             aks/deployment.yaml
+            aks/ingress.yaml
             aks/service.yaml
           kubectl-version: 'v1.18.14'
