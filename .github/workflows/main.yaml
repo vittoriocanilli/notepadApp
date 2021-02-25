@@ -5,6 +5,7 @@ on:
     paths:
       - .github/**
       - aks/*.yaml
+      - Dockerfile
 
 env:
   NODE_VERSION: '14' 
