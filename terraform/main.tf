@@ -18,6 +18,31 @@ terraform {
   required_version = "= 0.12.26"
 }
 
+resource "random_id" "notepadLogAnalyticsWorkspaceNameSuffix" {
+  byte_length = 8
+}
+
+resource "azurerm_log_analytics_workspace" "notepadLogAnalyticsWorkspace" {
+  # The WorkSpace name has to be unique across the whole of azure, not just the current subscription/tenant.
+  name = "notepad-cluster-${random_id.notepadLogAnalyticsWorkspaceNameSuffix.dec}"
+  location = var.azure_region
+  resource_group_name = var.resource_group
+  sku = "PerGB2018"
+}
+
+resource "azurerm_log_analytics_solution" "notepadLogAnalyticsSolution" {
+  solution_name = "ContainerInsights"
+  location = var.azure_region
+  resource_group_name = var.resource_group
+  workspace_resource_id = azurerm_log_analytics_workspace.notepadLogAnalyticsWorkspace.id
+  workspace_name = azurerm_log_analytics_workspace.notepadLogAnalyticsWorkspace.name
+
+  plan {
+    publisher = "Microsoft"
+    product = "OMSGallery/ContainerInsights"
+  }
+}
+
 resource "azurerm_kubernetes_cluster" "notepadCluster" {
   name                = "notepad-cluster"
   location            = var.azure_region
@@ -32,6 +57,13 @@ resource "azurerm_kubernetes_cluster" "notepadCluster" {
 
   identity {
     type = "SystemAssigned"
+  }
+
+  addon_profile {
+    oms_agent {
+      enabled = true
+      log_analytics_workspace_id = azurerm_log_analytics_workspace.notepadLogAnalyticsWorkspace.id
+    }
   }
 }
 

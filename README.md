@@ -41,4 +41,4 @@ Here are listed the business requirements of the assignment, and for each of the
 * The Customer wants to provision separated environments to support their development process for development, testing, production in the near future.
     * Different Kubernetes namespaces can be defined for different environments; ideally the production environment's namespace is located on a separate Kubernetes cluster.
 * The Customer wants to see relevant metrics and logs from the infrastructure for quality assurance and security purposes.
-    * A Log Analytics Workspace can be created in Azure with Terraform together with the Kubernetes cluster in order to get metrics and logs from the cluster.
+    * The Log Analytics Workspace created in Azure with Terraform together with the Kubernetes cluster can be used in order to get metrics and logs from the cluster.
