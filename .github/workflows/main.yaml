@@ -43,7 +43,7 @@ jobs:
       APP_FOLDER: ${{ github.workspace }}/app
     steps:
       - name: Download Express NoteJam app
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4.1.7
         with:
           name: express-notejam-app
           path: ${{ env.APP_FOLDER }}
@@ -58,7 +58,7 @@ jobs:
       - name: Init database
         run: cd ${{ env.APP_FOLDER }} && node db.js
       - name: Download Dockerfile
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4.1.7
         with:
           name: dockerfile
       - name: Login to Docker registry
@@ -77,7 +77,7 @@ jobs:
     needs: [test_and_build]
     steps:
       - name: Kubernetes YAML files
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4.1.7
         with:
           name: kubernetes-yaml
           path: aks
